@@ -1,6 +1,6 @@
 import type { TypeGuardError } from "typia";
 
-import { BaseError } from "@little-nebulae/error";
+import { BaseError, composeErrorMessage } from "@little-nebulae/error";
 
 import type { AssertionErrorCode } from "@/error/codes";
 
@@ -12,4 +12,18 @@ export class AssertionError<T> extends BaseError<
 > {
   readonly name = "AssertionError";
   readonly code = ASSERTION_ERROR_CODE;
+
+  constructor({
+    expectedType,
+    cause,
+  }: {
+    expectedType: string;
+    cause: TypeGuardError<T>;
+  }) {
+    const message = composeErrorMessage({
+      operation: `assert value as ${expectedType}`,
+      reason: "it being invalid",
+    });
+    super({ message, cause, meta: null });
+  }
 }
