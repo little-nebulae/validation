@@ -12,6 +12,7 @@ import { ValidationError } from "@/error/classes/validation";
 
 export function attemptValidate<T>(
   value: unknown,
+  { expectedType }: { expectedType: string },
 ): Result<T, ValidationError | UnexpectedError> {
   try {
     const validateResult = validate<T>(value);
@@ -19,14 +20,7 @@ export function attemptValidate<T>(
       return succeed(validateResult.data);
     }
     return fail(
-      new ValidationError({
-        message: composeErrorMessage({
-          operation: "validate value",
-          reason: DEFAULT_FAILURE_REASON,
-        }),
-        cause: validateResult.errors,
-        meta: null,
-      }),
+      new ValidationError({ expectedType, cause: validateResult.errors }),
     );
   } catch (error) {
     return fail(
