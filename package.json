@@ -23,8 +23,7 @@
     "lint:fix": "oxlint --fix --disable-nested-config",
     "check": "pnpm run lint && pnpm run fmt:check",
     "fix": "pnpm run lint:fix && pnpm run fmt",
-    "test": "vitest run",
-    "try": "ttsx src/try.ts"
+    "test": "vitest run"
   },
   "devDependencies": {
     "@arethetypeswrong/core": "0.18.5",
