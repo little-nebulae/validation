@@ -8,7 +8,7 @@ import {
 } from "@little-nebulae/error";
 import { fail, succeed } from "@little-nebulae/result";
 
-import { ValidationError } from "@/error";
+import { ValidationError } from "@/error/classes/validation";
 
 export function validateSync<T extends StandardSchemaV1>({
   schema,

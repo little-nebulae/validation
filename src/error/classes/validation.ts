@@ -2,8 +2,9 @@ import type { StandardSchemaV1 } from "@standard-schema/spec";
 
 import { BaseError } from "@little-nebulae/error";
 
-export const VALIDATION_ERROR_CODE = "VALIDATION_ERROR";
-export type ValidationErrorCode = typeof VALIDATION_ERROR_CODE;
+import type { ValidationErrorCode } from "@/error/codes";
+
+import { VALIDATION_ERROR_CODE } from "@/error/codes";
 
 export class ValidationError extends BaseError<ValidationErrorCode> {
   readonly name = "ValidationError";
