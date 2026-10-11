@@ -7,6 +7,7 @@ import { BaseError } from "@little-nebulae/error";
 import type { ValidationErrorCode } from "@/error/codes";
 
 import { VALIDATION_ERROR_CODE } from "@/error/codes";
+import { joinIssueMessages } from "@/utils/join-issue-messages";
 
 export class ValidationError<
   TCause extends SchemaError,
@@ -27,7 +28,7 @@ export class ValidationError<
     meta: TMeta;
     issues: readonly StandardSchemaV1.Issue[];
   }) {
-    super({ message: message ?? cause.message, cause, meta });
+    super({ message: message ?? joinIssueMessages(issues), cause, meta });
     this.issues = issues;
   }
 }
