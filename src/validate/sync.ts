@@ -9,6 +9,7 @@ import {
 import { fail, succeed } from "@little-nebulae/result";
 import { SchemaError } from "@standard-schema/utils";
 
+import { UnsupportedAsyncSchemaError } from "@/error/classes/unsuppported-async-schema";
 import { ValidationError } from "@/error/classes/validation";
 
 export function validateSync<T extends StandardSchemaV1>({
@@ -17,19 +18,15 @@ export function validateSync<T extends StandardSchemaV1>({
 }: {
   schema: T;
   input: StandardSchemaV1.InferInput<T>;
-}): Result<StandardSchemaV1.InferOutput<T>, ValidationError | UnexpectedError> {
+}): Result<
+  StandardSchemaV1.InferOutput<T>,
+  ValidationError | UnsupportedAsyncSchemaError<T> | UnexpectedError
+> {
   try {
     let result = schema["~standard"].validate(input);
 
     if (result instanceof Promise) {
-      return fail(
-        new UnexpectedError({
-          message:
-            "Schema validation returned a Promise, but this API only supports synchronous schemas. Use a synchronous schema or the async variant.",
-          cause: null,
-          meta: null,
-        }),
-      );
+      return fail(new UnsupportedAsyncSchemaError(result));
     }
 
     if (result.issues) {
