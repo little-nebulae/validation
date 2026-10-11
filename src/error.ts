@@ -8,7 +8,7 @@ export type ValidationErrorCode = typeof VALIDATION_ERROR_CODE;
 export class ValidationError extends BaseError<ValidationErrorCode> {
   readonly name = "ValidationError";
   readonly code = VALIDATION_ERROR_CODE;
-  readonly issues: StandardSchemaV1.Issue[];
+  readonly issues: readonly StandardSchemaV1.Issue[];
 
   constructor({
     message,
@@ -17,7 +17,7 @@ export class ValidationError extends BaseError<ValidationErrorCode> {
   }: {
     message: string;
     cause: unknown;
-    issues: StandardSchemaV1.Issue[];
+    issues: readonly StandardSchemaV1.Issue[];
   }) {
     super({ message, cause, meta: null });
     this.issues = issues;
