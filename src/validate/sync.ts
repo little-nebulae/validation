@@ -6,11 +6,12 @@ import {
   DEFAULT_FAILURE_REASON,
   UnexpectedError,
 } from "@little-nebulae/error";
-import { fail, succeed } from "@little-nebulae/result";
-import { SchemaError } from "@standard-schema/utils";
+import { fail } from "@little-nebulae/result";
+
+import type { ValidationError } from "@/error/classes/validation";
 
 import { UnsupportedAsyncSchemaError } from "@/error/classes/unsuppported-async-schema";
-import { ValidationError } from "@/error/classes/validation";
+import { handleStandardResult } from "@/utils/handle-standard-result";
 
 export function validateSync<T extends StandardSchemaV1>({
   schema,
@@ -20,7 +21,7 @@ export function validateSync<T extends StandardSchemaV1>({
   input: StandardSchemaV1.InferInput<T>;
 }): Result<
   StandardSchemaV1.InferOutput<T>,
-  ValidationError | UnsupportedAsyncSchemaError<T> | UnexpectedError
+  UnsupportedAsyncSchemaError<T> | ValidationError | UnexpectedError
 > {
   try {
     let result = schema["~standard"].validate(input);
@@ -29,18 +30,7 @@ export function validateSync<T extends StandardSchemaV1>({
       return fail(new UnsupportedAsyncSchemaError(result));
     }
 
-    if (result.issues) {
-      const issues = result.issues;
-      return fail(
-        new ValidationError({
-          cause: new SchemaError(issues),
-          meta: null,
-          issues,
-        }),
-      );
-    }
-
-    return succeed(result.value);
+    return handleStandardResult(result);
   } catch (error) {
     return fail(
       new UnexpectedError({
