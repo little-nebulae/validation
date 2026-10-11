@@ -6,7 +6,7 @@ import { SchemaError } from "@standard-schema/utils";
 
 import { ValidationError } from "@/error/classes/validation";
 
-export function handleStandardResult<T extends StandardSchemaV1>(
+export function wrapStandardResult<T extends StandardSchemaV1>(
   result: StandardSchemaV1.Result<StandardSchemaV1.InferOutput<T>>,
 ): Result<StandardSchemaV1.InferOutput<T>, ValidationError> {
   if (result.issues) {

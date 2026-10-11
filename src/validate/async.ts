@@ -7,7 +7,7 @@ import {
 } from "@little-nebulae/error";
 import { fail } from "@little-nebulae/result";
 
-import { handleStandardResult } from "@/utils/handle-standard-result";
+import { wrapStandardResult } from "@/utils/wrap-standard-result";
 
 export async function validateAsync<T extends StandardSchemaV1>({
   schema,
@@ -21,7 +21,7 @@ export async function validateAsync<T extends StandardSchemaV1>({
     if (result instanceof Promise) {
       result = await result;
     }
-    return handleStandardResult(result);
+    return wrapStandardResult(result);
   } catch (error) {
     return fail(
       new UnexpectedError({
