@@ -24,18 +24,16 @@ export function validateSync<T extends StandardSchemaV1>({
   UnsupportedAsyncSchemaError<T> | ValidationError | UnexpectedError
 > {
   try {
-    let result = schema["~standard"].validate(input);
-
+    const result = schema["~standard"].validate(input);
     if (result instanceof Promise) {
       return fail(new UnsupportedAsyncSchemaError(result));
     }
-
     return handleStandardResult(result);
   } catch (error) {
     return fail(
       new UnexpectedError({
         message: composeErrorMessage({
-          operation: "validate input with schema",
+          operation: "validate input synchronously with schema",
           reason: DEFAULT_FAILURE_REASON,
         }),
         cause: error,
