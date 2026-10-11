@@ -26,6 +26,7 @@ export function validateSync<T extends StandardSchemaV1>({
   try {
     const result = schema["~standard"].validate(input);
     if (result instanceof Promise) {
+      result.catch(() => {});
       return fail(new UnsupportedAsyncSchemaError(result));
     }
     return wrapStandardResult(result);
