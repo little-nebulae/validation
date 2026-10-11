@@ -10,7 +10,7 @@ import { VALIDATION_ERROR_CODE } from "@/error/codes";
 import { joinIssueMessages } from "@/utils/join-issue-messages";
 
 export class ValidationError<
-  TCause extends SchemaError,
+  TCause extends SchemaError = SchemaError,
   TMeta extends BaseErrorMeta = null,
 > extends BaseError<ValidationErrorCode, TCause, TMeta> {
   readonly name = "ValidationError";

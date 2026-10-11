@@ -7,6 +7,7 @@ import {
   UnexpectedError,
 } from "@little-nebulae/error";
 import { fail, succeed } from "@little-nebulae/result";
+import { SchemaError } from "@standard-schema/utils";
 
 import { ValidationError } from "@/error/classes/validation";
 
@@ -35,11 +36,7 @@ export function validateSync<T extends StandardSchemaV1>({
       const issues = result.issues;
       return fail(
         new ValidationError({
-          message: composeErrorMessage({
-            operation: "validate input with schema",
-            reason: `${issues.length} issues`,
-          }),
-          cause: issues,
+          cause: new SchemaError(issues),
           meta: null,
           issues,
         }),
