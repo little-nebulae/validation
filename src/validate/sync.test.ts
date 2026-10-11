@@ -87,4 +87,23 @@ describe("validateSync function should fail", () => {
     expect(error.code).toBe(UNSUPPORTED_ASYNC_SCHEMA_ERROR_CODE);
     expect(error.cause).toBeInstanceOf(Promise);
   });
+
+  test("with UnsupportedAsyncSchemaError when a refine throws", async () => {
+    const input = "Hello there";
+    const errorMessage = "Kaboom, baby!";
+
+    const schema = z.string().refine(() => {
+      throw new Error(errorMessage);
+    });
+
+    const result = validateSync({ schema, input });
+    assert(result.success === false);
+
+    const error = result.error;
+    assert(error instanceof UnsupportedAsyncSchemaError);
+    expect(error.code).toBe(UNSUPPORTED_ASYNC_SCHEMA_ERROR_CODE);
+    expect(error.cause).toBeInstanceOf(Promise);
+
+    await expect(error.cause).rejects.toThrow(errorMessage);
+  });
 });
