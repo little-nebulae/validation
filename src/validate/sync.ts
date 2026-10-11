@@ -40,6 +40,7 @@ export function validateSync<T extends StandardSchemaV1>({
             reason: `${issues.length} issues`,
           }),
           cause: issues,
+          meta: null,
           issues,
         }),
       );
