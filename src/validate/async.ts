@@ -1,10 +1,13 @@
 import type { StandardSchemaV1 } from "@standard-schema/spec";
 
-import { fail, succeed } from "@little-nebulae/result";
-import { SchemaError } from "@standard-schema/utils";
+import {
+  composeErrorMessage,
+  DEFAULT_FAILURE_REASON,
+  UnexpectedError,
+} from "@little-nebulae/error";
+import { fail } from "@little-nebulae/result";
 
-import { ValidationError } from "@/error/classes/validation";
-import { validateSync } from "@/validate/sync";
+import { handleStandardResult } from "@/utils/handle-standard-result";
 
 export async function validateAsync<T extends StandardSchemaV1>({
   schema,
@@ -13,26 +16,22 @@ export async function validateAsync<T extends StandardSchemaV1>({
   schema: T;
   input: StandardSchemaV1.InferInput<T>;
 }) {
-  const syncResult = validateSync({ schema, input });
-
-  if (!syncResult.success) {
-    if (syncResult.error.code === "UNSUPPORTED_ASYNC_SCHEMA_ERROR") {
-      const result = await syncResult.error.cause;
-
-      if (result.issues) {
-        const issues = result.issues;
-        return fail(
-          new ValidationError({
-            cause: new SchemaError(issues),
-            meta: null,
-            issues,
-          }),
-        );
-      }
-
-      return succeed(result.value);
+  try {
+    let result = schema["~standard"].validate(input);
+    if (result instanceof Promise) {
+      result = await result;
     }
-    return syncResult;
+    return handleStandardResult(result);
+  } catch (error) {
+    return fail(
+      new UnexpectedError({
+        message: composeErrorMessage({
+          operation: "validate input asynchronously with schema",
+          reason: DEFAULT_FAILURE_REASON,
+        }),
+        cause: error,
+        meta: null,
+      }),
+    );
   }
-  return syncResult;
 }
