@@ -7,7 +7,7 @@ import {
 } from "@little-nebulae/error";
 import { fail } from "@little-nebulae/result";
 
-import { wrapStandardResult } from "@/utils/wrap-result/wrap-standard-result";
+import { wrapStandardResult } from "@/utils/wrap-result/standard";
 
 export async function validateAsync<T extends StandardSchemaV1>({
   schema,

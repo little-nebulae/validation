@@ -11,7 +11,7 @@ import { fail } from "@little-nebulae/result";
 import type { ValidationError } from "@/error/classes/validation";
 
 import { UnsupportedAsyncSchemaError } from "@/error/classes/unsuppported-async-schema";
-import { wrapStandardResult } from "@/utils/wrap-result/wrap-standard-result";
+import { wrapStandardResult } from "@/utils/wrap-result/standard";
 
 export function validateSync<T extends StandardSchemaV1>({
   schema,
