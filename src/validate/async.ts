@@ -17,10 +17,7 @@ export async function validateAsync<T extends StandardSchemaV1>({
   input: StandardSchemaV1.InferInput<T>;
 }) {
   try {
-    let result = schema["~standard"].validate(input);
-    if (result instanceof Promise) {
-      result = await result;
-    }
+    const result = await schema["~standard"].validate(input);
     return wrapStandardResult(result);
   } catch (error) {
     return fail(
